@@ -1,7 +1,7 @@
 package com.example.daggerpractice.di.modules
 
-import com.example.daggerpractice.data.web.RandomTextApiInterface
-import com.example.daggerpractice.data.web.TheCatApiInterface
+import com.example.daggerpractice.data.client.RandomTextApiInterface
+import com.example.daggerpractice.data.client.TheCatApiInterface
 import com.example.daggerpractice.di.AppScope
 import dagger.Module
 import dagger.Provides
@@ -16,7 +16,7 @@ class RetrofitModule {
     @Module
     companion object {
         private val CATS_BASE_URL = "https://api.thecatapi.com/v1/images/search/"
-        private val TEXT_BASE_URL = "randomtext.me"
+        private val TEXT_BASE_URL = "http://www.randomtext.me/"
 
         @JvmStatic
         @AppScope

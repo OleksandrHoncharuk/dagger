@@ -1,4 +1,4 @@
-package com.example.daggerpractice.data.web
+package com.example.daggerpractice.data.client
 
 import com.example.daggerpractice.data.pojo_models.text.TextResponce
 import retrofit2.http.GET

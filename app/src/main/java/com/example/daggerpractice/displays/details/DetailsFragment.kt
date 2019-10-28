@@ -1,4 +1,4 @@
-package com.example.daggerpractice.details
+package com.example.daggerpractice.displays.details
 
 import androidx.fragment.app.Fragment
 

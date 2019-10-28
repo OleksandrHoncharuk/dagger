@@ -1,4 +1,4 @@
-package com.example.daggerpractice.home.adapter
+package com.example.daggerpractice.displays.home.adapter
 
 import android.view.LayoutInflater
 import android.view.View

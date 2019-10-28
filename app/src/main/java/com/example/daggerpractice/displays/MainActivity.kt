@@ -1,7 +1,8 @@
-package com.example.daggerpractice
+package com.example.daggerpractice.displays
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.example.daggerpractice.R
 
 class MainActivity : AppCompatActivity() {
 

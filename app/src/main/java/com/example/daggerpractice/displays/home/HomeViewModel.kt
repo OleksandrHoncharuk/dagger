@@ -1,4 +1,4 @@
-package com.example.daggerpractice.home
+package com.example.daggerpractice.displays.home
 
 import androidx.lifecycle.ViewModel
 
