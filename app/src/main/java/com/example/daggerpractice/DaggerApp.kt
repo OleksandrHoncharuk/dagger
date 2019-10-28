@@ -1,26 +1,26 @@
 package com.example.daggerpractice
 
-import android.app.Application
-import android.content.Context
+import com.example.daggerpractice.data.Repository
+import com.example.daggerpractice.di.components.DaggerAppComponent
+import dagger.android.AndroidInjector
+import dagger.android.DaggerApplication
+import javax.inject.Inject
 
-class DaggerApp: Application() {
+class DaggerApp : DaggerApplication() {
 
-    companion object{
-        fun getApp(context: Context): DaggerApp {
-            return context.applicationContext as DaggerApp
-        }
-    }
+    @set:Inject
+    var repository: Repository? = null
 
     override fun onCreate() {
         super.onCreate()
-        buildGraphAndInject()
+
+        //todo Add Corutines for API and room
     }
 
-    private fun buildGraphAndInject() {
 
+    override fun applicationInjector(): AndroidInjector<out DaggerApp> {
+        return DaggerAppComponent.builder().create(this)
     }
 
-    fun getAppComponent() {
 
-    }
 }

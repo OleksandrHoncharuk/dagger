@@ -1,7 +1,9 @@
 package com.example.daggerpractice.di.modules
 
-import android.app.Application
 import com.example.daggerpractice.DaggerApp
+import com.example.daggerpractice.data.Repository
+import com.example.daggerpractice.data.client.RandomTextApiInterface
+import com.example.daggerpractice.data.client.TheCatApiInterface
 import com.example.daggerpractice.data.persistance.repository.Repositories
 import com.example.daggerpractice.data.persistance.repository.database.DatabaseRepositoryImpl
 import com.example.daggerpractice.data.persistance.repository.database.dao.UserDao
@@ -9,19 +11,22 @@ import com.example.daggerpractice.di.AppScope
 import dagger.Module
 import dagger.Provides
 
-@Module(includes = [OkHttpClientModule::class, RetrofitModule::class])
-class DaggerAppModule(private val app: DaggerApp) {
-
+@Module(includes = [OkHttpClientModule::class, RetrofitModule::class, ViewModelModule::class])
+class DaggerAppModule {
 
     @Provides
     @AppScope
-    fun provideApplication(): Application {
-        return app
+    fun provideDao(app: DaggerApp): UserDao {
+        return (Repositories.getDatabase(app) as DatabaseRepositoryImpl).userDao()
     }
 
     @Provides
     @AppScope
-    fun provideDao(app: Application): UserDao {
-        return (Repositories.getDatabase(app) as DatabaseRepositoryImpl).userDao()
+    fun provideRepository(
+        randomTextApi: RandomTextApiInterface,
+        theCatApi: TheCatApiInterface,
+        userDao: UserDao
+    ): Repository {
+        return Repository(randomTextApi, theCatApi, userDao)
     }
 }
