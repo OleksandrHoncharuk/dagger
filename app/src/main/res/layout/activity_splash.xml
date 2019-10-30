@@ -3,14 +3,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
+    android:fitsSystemWindows="true"
     tools:context=".displays.splash.SplashActivity"
-    tools:showIn="@layout/activity_splash">
+    android:orientation="vertical">
 
-    <RelativeLayout
-        android:id="@+id/relative_for_fragments"
+    <ProgressBar
+        android:id="@+id/progress_bar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        tools:context=".main_layout.MainActivity"/>
+        android:layout_height="match_parent"
+        android:theme="@style/AppTheme.NoActionBar" />
 
 </LinearLayout>

@@ -5,6 +5,6 @@ import retrofit2.http.GET
 
 interface RandomTextApiInterface {
 
-    @GET("api/lorem/ul-5/5-15/")
+    @GET("api/lorem/ul-20/5-15/")
     suspend fun getRandomText(): TextResponce
 }

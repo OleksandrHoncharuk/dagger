@@ -2,11 +2,12 @@ package com.example.daggerpractice.displays
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.example.daggerpractice.di.AppScope
 import javax.inject.Inject
 import javax.inject.Provider
 import javax.inject.Singleton
 
-@Singleton
+@AppScope
 class ViewModelFactory
 
 @Inject

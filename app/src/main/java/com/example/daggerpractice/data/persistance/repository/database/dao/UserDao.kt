@@ -5,21 +5,25 @@ import com.example.daggerpractice.data.persistance.model.User
 
 @Dao
 abstract class UserDao {
+
     @Insert(onConflict = OnConflictStrategy.ROLLBACK)
-    abstract suspend fun insert(user: User)
+    abstract fun insert(user: User)
 
     @Delete
-    abstract suspend fun delete(user: User)
+    abstract fun delete(user: User)
 
     @Update(onConflict = OnConflictStrategy.ROLLBACK)
-    abstract suspend fun update(user: User)
+    abstract fun update(user: User)
 
     @Query("DELETE FROM user")
-    abstract suspend fun deleteAll()
+    abstract suspend fun deleteAll(): Int
+
+    @Query("SELECT * FROM user")
+    abstract suspend fun getAll(): List<User>
 
     @Query("SELECT * FROM user WHERE id=:id")
-    abstract suspend fun findById(id: String): User
+    abstract fun findById(id: String): User
 
     @Query("SELECT * FROM user WHERE title=:title")
-    abstract suspend fun findByTitle(title: String): User
+    abstract fun findByTitle(title: String): User
 }

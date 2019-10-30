@@ -1,6 +1,6 @@
 package com.example.daggerpractice.displays.home
 
-import androidx.fragment.app.Fragment
+import dagger.android.support.DaggerFragment
 
-class HomeFragment: Fragment(), HomeView {
+class HomeFragment : DaggerFragment(), HomeView {
 }
