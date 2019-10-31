@@ -38,6 +38,21 @@ class Repository(
         emit(data)
     }
 
+    suspend fun getRandomText(): TextResponce {
+        Log.d("Repository", "start download text")
+        return randomTextApi.getRandomText()
+    }
+
+    suspend fun getCatsImage(): List<ImageResponce> {
+        Log.d("Repository", "start download image")
+        return theCatApi.getCatsImage()
+    }
+
+    suspend fun getAllUsers(): List<User> {
+        Log.d("Repository", "start get user from database")
+        return userDao.getAll()
+    }
+
     fun insertNewUser(user: User) = userDao.insert(user)
 
     fun deleteUser(user: User) = userDao.delete(user)
@@ -46,4 +61,7 @@ class Repository(
 
     fun findById(id: String) = userDao.findById(id)
 
+    suspend fun deleteAllUsers() {
+        userDao.deleteAll()
+    }
 }

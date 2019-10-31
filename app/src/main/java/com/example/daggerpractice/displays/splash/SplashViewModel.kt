@@ -1,60 +1,80 @@
 package com.example.daggerpractice.displays.splash
 
+import android.content.Context
+import android.content.Intent
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.daggerpractice.data.Repository
 import com.example.daggerpractice.data.persistance.model.User
 import com.example.daggerpractice.data.pojo_models.image.ImageResponce
 import com.example.daggerpractice.data.pojo_models.text.TextResponce
+import com.example.daggerpractice.displays.MainActivity
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class SplashViewModel @Inject
-constructor(private val view: SplashActivity, private val repository: Repository): ViewModel() {
+constructor(private val repository: Repository): ViewModel() {
 
-    private val imagesUrlList: ArrayList<String>
-    private val textList: ArrayList<String>
+    private val imagesUrlList: ArrayList<String> = ArrayList()
+    private val textList: ArrayList<String> = ArrayList()
 
-    private var _images: LiveData<List<ImageResponce>>? = null
-    var images: LiveData<List<ImageResponce>>? = null
+    var isDatabaseFull = false
+    private var isImagesDownloaded = false
+    private var isTextDownloaded = false
 
-    private var _text: LiveData<TextResponce>? = null
-    var text: LiveData<TextResponce>? = null
+    private val _images = MutableLiveData<List<ImageResponce>>()
+    val images: LiveData<List<ImageResponce>>
+        get() = _images
 
-    private var _users: LiveData<List<User>>? = null
-    var users: LiveData<List<User>>? = null
+    private val _text = MutableLiveData<TextResponce>()
+    val text: LiveData<TextResponce> get() = _text
+
+    private val _users = MutableLiveData<List<User>>()
+    val users: LiveData<List<User>>
+        get() = _users
 
     init {
-        imagesUrlList = ArrayList()
-        textList = ArrayList()
-    }
+        viewModelScope.launch {
+            _users.value = repository.getAllUsers()
 
-    fun getUsers() {
-        Log.d("SplashViewModel", "get users")
-        users = repository.users
-    }
-
-    fun downloadDataInFirstLaunch(users: List<User>?) {
-        Log.d("SplashViewModel", users.isNullOrEmpty().toString())
-        if (users.isNullOrEmpty()) {
-            Log.d("SplashViewModel", "set value to livedata")
-            images = repository.catsImage
-            text = repository.textResponce
-        }
-    }
-
-    fun handleAndSaveData(imagesResponse: List<ImageResponce>? = null, textResponse: TextResponce? = null) {
-        if (imagesResponse.isNullOrEmpty().not()) {
-            imagesResponse!!.forEach { image ->
-                imagesUrlList.add(image.id!! + " " + image.url)
+            if (_users.value.isNullOrEmpty()) {
+                _images.value = repository.getCatsImage()
+                _text.value = repository.getRandomText()
             }
         }
+    }
 
-        else if (textResponse != null) {
-           addTextToTextList(textResponse)
+    fun handleAndSaveImage(imagesResponse: List<ImageResponce>) {
+        imagesResponse.forEach { image ->
+            imagesUrlList.add(image.id!! + " " + image.url)
         }
 
+        isImagesDownloaded = true
+    }
+
+    fun handleAndSaveRandomText(textResponse: TextResponce) {
+        textResponse.textOut!!
+            .substring(10)
+            .replace("</ul>", "")
+            .replace("\\r", "")
+            .replace("</li>", "")
+            .replace("<\\/li>", "")
+            .split("<li>")
+            .forEach {
+                textList.add(it)
+            }
+
+        isTextDownloaded = true
+    }
+
+    fun isDownloadComplete(): Boolean {
+        return isImagesDownloaded && isTextDownloaded
+    }
+
+    fun handleAndSaveData() {
         if (imagesUrlList.isEmpty().not() && textList.isEmpty().not()) {
             if (imagesUrlList.size == textList.size) {
                 val imagesIterator = imagesUrlList.iterator()
@@ -63,21 +83,7 @@ constructor(private val view: SplashActivity, private val repository: Repository
                 while (imagesIterator.hasNext() && textIterator.hasNext()) {
                     addUser(imagesIterator.next(), textIterator.next())
                 }
-
-                view.startMainActivity()
             }
-        }
-    }
-
-    private fun addTextToTextList(textResponse: TextResponce) {
-        var count = textResponse.amount!!
-        var textOut = textResponse.textOut!!
-
-        while (count != 0) {
-            val string = textOut.substring(textOut.indexOf("<li>"), textOut.indexOf("<\\/li>"))
-            textList.add(string)
-            textOut = textOut.substring(string.length)
-            count--
         }
     }
 
@@ -89,6 +95,7 @@ constructor(private val view: SplashActivity, private val repository: Repository
         user.title = title
         user.text = text.substring(title.length)
 
+        Log.d("User", user.url + user.text + user.title)
         repository.insertNewUser(user)
     }
 }

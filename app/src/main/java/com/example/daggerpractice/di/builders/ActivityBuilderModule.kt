@@ -1,5 +1,6 @@
 package com.example.daggerpractice.di.builders
 
+import com.example.daggerpractice.displays.MainActivity
 import com.example.daggerpractice.displays.splash.SplashActivity
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
@@ -8,5 +9,8 @@ import dagger.android.ContributesAndroidInjector
 abstract class ActivityBuilderModule {
 
     @ContributesAndroidInjector(modules = [FragmentBuilderModule::class])
-    internal abstract fun mainActivity(): SplashActivity
+    internal abstract fun splashActivity(): SplashActivity
+
+    @ContributesAndroidInjector(modules = [FragmentBuilderModule::class])
+    internal abstract fun mainActivity(): MainActivity
 }
