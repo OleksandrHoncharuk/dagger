@@ -15,9 +15,9 @@ class FillDatabaseWithNewUsersWorker(context: Context, workerParams: WorkerParam
     Worker(context, workerParams) {
 
     override fun doWork(): Result {
+        //todo put in runBlocking
         val imagesList = repository.getAllImages()
         val textList = repository.getAllText()
-
 
         val imagesIterator = imagesList.iterator()
         val textIterator = textList.iterator()
@@ -26,11 +26,11 @@ class FillDatabaseWithNewUsersWorker(context: Context, workerParams: WorkerParam
             addUser(imagesIterator.next(), textIterator.next().text!!)
         }
 
-        Log.d("FillDatabaseWithNew", "New User added")
         return Result.success()
     }
 
     private fun addUser(image: Image, text: String) {
+        Log.d("FillDatabaseWithNew", "New User added")
         val user = User(image.id)
         user.url = image.url
 

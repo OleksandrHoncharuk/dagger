@@ -63,7 +63,10 @@ class Repository @Inject constructor(
         return database.userDao().getAll()
     }
 
-    fun insertNewUser(user: User) = database.userDao().insert(user)
+    fun insertNewUser(user: User) {
+        Log.d("Repository", "add new user")
+        database.userDao().insert(user)
+    }
 
     fun deleteUser(user: User) = database.userDao().delete(user)
 
@@ -81,6 +84,7 @@ class Repository @Inject constructor(
 
     fun deleteImage(image: Image) = database.imageDao().delete(image)
 
+    //todo make fun suspend
     fun getAllImages() = database.imageDao().getAll()
 
 
@@ -92,6 +96,7 @@ class Repository @Inject constructor(
 
     fun deleteText(text: Text) = database.textDao().delete(text)
 
+    //todo make fun suspend
     fun getAllText() = database.textDao().getAll()
 
 }

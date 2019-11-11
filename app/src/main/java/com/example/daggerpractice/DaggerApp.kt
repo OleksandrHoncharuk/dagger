@@ -6,6 +6,7 @@ import com.example.daggerpractice.managers.factory.ManagerFactory
 import com.example.daggerpractice.managers.work.DatabaseSizeCheckWorker
 import com.example.daggerpractice.managers.work.DownloadAndSaveImagesWorker
 import com.example.daggerpractice.managers.work.DownloadAndSaveTextWorker
+import com.example.daggerpractice.managers.work.FillDatabaseWithNewUsersWorker
 import dagger.android.AndroidInjector
 import dagger.android.DaggerApplication
 import javax.inject.Inject
@@ -40,7 +41,7 @@ class DaggerApp: DaggerApplication() {
 //        .setConstraints(storageConstraints())
         .build()
 
-    private fun fillDatabase() = OneTimeWorkRequestBuilder<DownloadAndSaveTextWorker>()
+    private fun fillDatabase() = OneTimeWorkRequestBuilder<FillDatabaseWithNewUsersWorker>()
 //        .setConstraints(storageConstraints())
         .build()
 

@@ -7,10 +7,12 @@ import androidx.work.Worker
 import androidx.work.WorkerParameters
 import com.example.daggerpractice.data.Repository
 import com.example.daggerpractice.data.persistance.model.Text
+import com.example.daggerpractice.di.AppScope
 import com.example.daggerpractice.managers.factory.ChildWorkerFactory
 import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
+@AppScope
 class DownloadAndSaveTextWorker(
     context: Context,
     workerParams: WorkerParameters,
@@ -45,6 +47,7 @@ class DownloadAndSaveTextWorker(
         repository.insertNewText(Text(text))
     }
 
+    @AppScope
     class Factory @Inject constructor(private val repository: Repository) : ChildWorkerFactory {
         override fun create(context: Context, params: WorkerParameters): ListenableWorker {
             return DownloadAndSaveTextWorker(context, params, repository)
