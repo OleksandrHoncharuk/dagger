@@ -17,7 +17,7 @@ class SplashActivity @Inject constructor() : DaggerAppCompatActivity() {
     @set:Inject
     var viewModelFactory: ViewModelProvider.Factory? = null
 
-    private val tag: String = "SplashActivity"
+    private val TAG: String = SplashActivity::class.java.simpleName
 
     private lateinit var splashViewModel: SplashViewModel
     private var mainIntent: Intent? = null
@@ -34,44 +34,43 @@ class SplashActivity @Inject constructor() : DaggerAppCompatActivity() {
 
     private fun setObserversToViewModel() {
         splashViewModel.users.observe(this, Observer {
-            Log.d(tag, "set user observer start")
+            Log.d(TAG, "set user observer start")
             if (it.size >= 20) startMainActivity()
-            Log.d(tag, "set user observer finish")
+            else setMediatorLiveDataObserverOnDataSource()
+            Log.d(TAG, "set user observer finish")
         })
-
-        setMediatorLiveDataObserverOnDataSource()
     }
 
     private fun setMediatorLiveDataObserverOnDataSource() {
-        Log.d(tag, "start mediator")
+        Log.d(TAG, "start mediator")
         val mediator: MediatorLiveData<Boolean> = MediatorLiveData()
 
-        Log.d(tag, "set first source to mediator")
+        Log.d(TAG, "set first source to mediator")
         mediator.addSource(splashViewModel.images) {
-            Log.d(tag, "set image observer start")
+            Log.d(TAG, "set image observer start")
             splashViewModel.handleAndSaveImage(it)
             if (splashViewModel.isDownloadComplete())
                 mediator.value = true
-            Log.d(tag, "set image observer finish")
+            Log.d(TAG, "set image observer finish")
         }
 
-        Log.d(tag, "set second source to mediator")
+        Log.d(TAG, "set second source to mediator")
         mediator.addSource(splashViewModel.text) {
-            Log.d(tag, "set text observer start")
+            Log.d(TAG, "set text observer start")
             splashViewModel.handleAndSaveRandomText(it)
             if (splashViewModel.isDownloadComplete())
                 mediator.value = true
-            Log.d(tag, "set text observer finish")
+            Log.d(TAG, "set text observer finish")
         }
 
         mediator.observe(this, Observer {
-            Log.d(tag, "start mediator observer")
+            Log.d(TAG, "start mediator observer")
             splashViewModel.handleAndSaveData()
         })
     }
 
-    fun startMainActivity() {
-        Log.d(tag, "start MainActivity")
+    private fun startMainActivity() {
+        Log.d(TAG, "start MainActivity")
         startActivity(Intent(this, MainActivity::class.java))
     }
 }

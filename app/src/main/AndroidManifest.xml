@@ -15,7 +15,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".displays.splash.SplashActivity">
+        <activity
+            android:name=".displays.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -23,11 +24,14 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".displays.MainActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.DEFAULT" />
-            </intent-filter>
-        </activity>
+        <provider
+            android:name="androidx.work.impl.WorkManagerInitializer"
+            android:authorities="com.example.daggerpractice.workmanager-init"
+            android:enabled="false"/>
+
+        <provider
+            android:name=".managers.WorkManagerInit"
+            android:authorities="com.example.daggerpractice.WorkManagerInit"/>
     </application>
 
 </manifest>

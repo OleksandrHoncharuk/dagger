@@ -9,6 +9,9 @@ apply plugin: 'kotlin-kapt'
 android {
     compileSdkVersion 29
     buildToolsVersion "29.0.1"
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
     defaultConfig {
         applicationId "com.example.daggerpractice"
         minSdkVersion 15
@@ -34,6 +37,8 @@ dependencies {
 
     // https://mvnrepository.com/artifact/de.hdodenhof/circleimageview
     implementation 'de.hdodenhof:circleimageview:2.1.0'
+
+    implementation "androidx.work:work-runtime-ktx:2.2.0"
 
     implementation 'androidx.core:core-ktx:1.0.2'
     implementation 'com.google.android.material:material:1.0.0'
@@ -69,4 +74,8 @@ dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     kapt 'com.google.dagger:dagger-compiler:2.22'
     kapt 'com.google.dagger:dagger-android-processor:2.22'
+
+    // Assisted Inject
+    compileOnly "com.squareup.inject:assisted-inject-annotations-dagger2:0.3.2"
+    kapt "com.squareup.inject:assisted-inject-processor-dagger2:0.3.2"
 }

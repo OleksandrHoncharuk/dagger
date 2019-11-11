@@ -16,10 +16,10 @@ abstract class UserDao {
     abstract fun update(user: User)
 
     @Query("DELETE FROM user")
-    abstract suspend fun deleteAll(): Int
+    abstract fun deleteAll(): Int
 
     @Query("SELECT * FROM user")
-    abstract suspend fun getAll(): List<User>
+    abstract fun getAll(): List<User>
 
     @Query("SELECT * FROM user WHERE id=:id")
     abstract fun findById(id: String): User

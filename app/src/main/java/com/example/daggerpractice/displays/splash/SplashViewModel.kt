@@ -1,7 +1,5 @@
 package com.example.daggerpractice.displays.splash
 
-import android.content.Context
-import android.content.Intent
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -11,17 +9,15 @@ import com.example.daggerpractice.data.Repository
 import com.example.daggerpractice.data.persistance.model.User
 import com.example.daggerpractice.data.pojo_models.image.ImageResponce
 import com.example.daggerpractice.data.pojo_models.text.TextResponce
-import com.example.daggerpractice.displays.MainActivity
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class SplashViewModel @Inject
-constructor(private val repository: Repository): ViewModel() {
+constructor(private val repository: Repository) : ViewModel() {
 
     private val imagesUrlList: ArrayList<String> = ArrayList()
     private val textList: ArrayList<String> = ArrayList()
 
-    var isDatabaseFull = false
     private var isImagesDownloaded = false
     private var isTextDownloaded = false
 

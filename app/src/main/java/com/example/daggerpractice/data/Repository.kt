@@ -5,63 +5,91 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.liveData
 import com.example.daggerpractice.data.client.RandomTextApiInterface
 import com.example.daggerpractice.data.client.TheCatApiInterface
+import com.example.daggerpractice.data.persistance.model.Image
+import com.example.daggerpractice.data.persistance.model.Text
 import com.example.daggerpractice.data.persistance.model.User
-import com.example.daggerpractice.data.persistance.repository.database.dao.UserDao
+import com.example.daggerpractice.data.persistance.repository.database.DatabaseRepositoryImpl
 import com.example.daggerpractice.data.pojo_models.image.ImageResponce
 import com.example.daggerpractice.data.pojo_models.text.TextResponce
 
 
 class Repository(
     private val randomTextApi: RandomTextApiInterface, private val theCatApi: TheCatApiInterface,
-    private val userDao: UserDao
+    private val database: DatabaseRepositoryImpl
 ) {
 
-    val textResponce: LiveData<TextResponce> = liveData {
-        Log.d("Repository", "start download text")
-        val data = randomTextApi.getRandomText()
-        Log.d("Repository", "finish download text")
-        emit(data)
-    }
+//    val textResponce: LiveData<TextResponce> = liveData {
+//        Log.d("Repository", "start download text")
+//        val data = randomTextApi.getRandomText()
+//        Log.d("Repository", "finish download text")
+//        emit(data)
+//    }
+//
+//
+//    val catsImage: LiveData<List<ImageResponce>> = liveData {
+//        Log.d("Repository", "start download image")
+//        val data = theCatApi.getCatsImage()
+//        Log.d("Repository", "finish download image")
+//        emit(data)
+//    }
+//
+//    val users: LiveData<List<User>> = liveData {
+//        Log.d("Repository", "start get user from database")
+//        val data = database.userDao().getAll()
+//        Log.d("Repository", "finish get user from database")
+//        emit(data)
+//    }
 
-
-    val catsImage: LiveData<List<ImageResponce>> = liveData {
-        Log.d("Repository", "start download image")
-        val data = theCatApi.getCatsImage()
-        Log.d("Repository", "finish download image")
-        emit(data)
-    }
-
-    val users: LiveData<List<User>> = liveData {
-        Log.d("Repository", "start get user from database")
-        val data = userDao.getAll()
-        Log.d("Repository", "finish get user from database")
-        emit(data)
-    }
-
-    suspend fun getRandomText(): TextResponce {
+    /**
+     * Network API
+     */
+    fun getRandomText(): TextResponce {
         Log.d("Repository", "start download text")
         return randomTextApi.getRandomText()
     }
 
-    suspend fun getCatsImage(): List<ImageResponce> {
+    fun getCatsImage(): List<ImageResponce> {
         Log.d("Repository", "start download image")
         return theCatApi.getCatsImage()
     }
 
-    suspend fun getAllUsers(): List<User> {
+    /**
+     * UserDao methods
+     */
+    fun getAllUsers(): List<User> {
         Log.d("Repository", "start get user from database")
-        return userDao.getAll()
+        return database.userDao().getAll()
     }
 
-    fun insertNewUser(user: User) = userDao.insert(user)
+    fun insertNewUser(user: User) = database.userDao().insert(user)
 
-    fun deleteUser(user: User) = userDao.delete(user)
+    fun deleteUser(user: User) = database.userDao().delete(user)
 
-    fun findByTitle(title: String) = userDao.findByTitle(title)
+    fun findByTitle(title: String) = database.userDao().findByTitle(title)
 
-    fun findById(id: String) = userDao.findById(id)
+    fun findById(id: String) = database.userDao().findById(id)
 
-    suspend fun deleteAllUsers() {
-        userDao.deleteAll()
-    }
+    suspend fun deleteAllUsers() = database.userDao().deleteAll()
+
+    /**
+     * ImageDao methods
+     */
+
+    fun insertNewImage(image: Image) = database.imageDao().insert(image)
+
+    fun deleteImage(image: Image) = database.imageDao().delete(image)
+
+    fun getAllImages() = database.imageDao().getAll()
+
+
+    /**
+     * TextDao methods
+     */
+
+    fun insertNewText(text: Text) = database.textDao().insert(text)
+
+    fun deleteText(text: Text) = database.textDao().delete(text)
+
+    fun getAllText() = database.textDao().getAll()
+
 }
