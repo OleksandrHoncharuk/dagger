@@ -11,9 +11,11 @@ import com.example.daggerpractice.data.persistance.model.User
 import com.example.daggerpractice.data.persistance.repository.database.DatabaseRepositoryImpl
 import com.example.daggerpractice.data.pojo_models.image.ImageResponce
 import com.example.daggerpractice.data.pojo_models.text.TextResponce
+import com.example.daggerpractice.di.AppScope
+import javax.inject.Inject
 
-
-class Repository(
+@AppScope
+class Repository @Inject constructor(
     private val randomTextApi: RandomTextApiInterface, private val theCatApi: TheCatApiInterface,
     private val database: DatabaseRepositoryImpl
 ) {
@@ -43,12 +45,12 @@ class Repository(
     /**
      * Network API
      */
-    fun getRandomText(): TextResponce {
+    suspend fun getRandomText(): TextResponce {
         Log.d("Repository", "start download text")
         return randomTextApi.getRandomText()
     }
 
-    fun getCatsImage(): List<ImageResponce> {
+    suspend fun getCatsImage(): List<ImageResponce> {
         Log.d("Repository", "start download image")
         return theCatApi.getCatsImage()
     }

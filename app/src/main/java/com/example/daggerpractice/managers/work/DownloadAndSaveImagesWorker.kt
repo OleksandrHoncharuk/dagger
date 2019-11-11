@@ -1,6 +1,7 @@
 package com.example.daggerpractice.managers.work
 
 import android.content.Context
+import android.util.Log
 import androidx.work.ListenableWorker
 import androidx.work.Worker
 import androidx.work.WorkerParameters
@@ -8,6 +9,8 @@ import com.example.daggerpractice.data.Repository
 import com.example.daggerpractice.data.persistance.model.Image
 import com.example.daggerpractice.data.pojo_models.image.ImageResponce
 import com.example.daggerpractice.managers.factory.ChildWorkerFactory
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
 class DownloadAndSaveImagesWorker(
@@ -17,15 +20,23 @@ class DownloadAndSaveImagesWorker(
     : Worker(context, workerParams){
 
     override fun doWork(): Result {
-        val imagesResponse = repository.getCatsImage()
+        return try {
+            runBlocking {
+                val imagesResponse = repository.getCatsImage()
+                imagesResponse.forEach { response ->
+                    insertImage(response)
+                }
+            }
 
-        imagesResponse.forEach { response ->
-            insertImage(response)
+            Result.success()
+        } catch (error: Throwable) {
+            Log.e("DownloadAndSaveImages", error.message!!)
+            Result.failure()
         }
-        return Result.success()
     }
 
     private fun insertImage(response: ImageResponce) {
+        Log.d("DownloadAndSaveImages", "new image added")
         repository.insertNewImage(Image(response.id!!, response.url!!))
     }
 
