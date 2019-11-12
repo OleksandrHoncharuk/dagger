@@ -20,6 +20,8 @@ class Repository @Inject constructor(
     private val database: DatabaseRepositoryImpl
 ) {
 
+    private val TAG = Repository::class.java.simpleName
+
 //    val textResponce: LiveData<TextResponce> = liveData {
 //        Log.d("Repository", "start download text")
 //        val data = randomTextApi.getRandomText()
@@ -46,12 +48,12 @@ class Repository @Inject constructor(
      * Network API
      */
     suspend fun getRandomText(): TextResponce {
-        Log.d("Repository", "start download text")
+        Log.d(TAG, "start download text")
         return randomTextApi.getRandomText()
     }
 
     suspend fun getCatsImage(): List<ImageResponce> {
-        Log.d("Repository", "start download image")
+        Log.d(TAG, "start download image")
         return theCatApi.getCatsImage()
     }
 
@@ -59,12 +61,12 @@ class Repository @Inject constructor(
      * UserDao methods
      */
     fun getAllUsers(): List<User> {
-        Log.d("Repository", "start get user from database")
+        Log.d(TAG, "start get user from database")
         return database.userDao().getAll()
     }
 
     fun insertNewUser(user: User) {
-        Log.d("Repository", "add new user")
+        Log.d(TAG, "add new user")
         database.userDao().insert(user)
     }
 
@@ -80,7 +82,10 @@ class Repository @Inject constructor(
      * ImageDao methods
      */
 
-    fun insertNewImage(image: Image) = database.imageDao().insert(image)
+    fun insertNewImage(image: Image) {
+        Log.d(TAG, "new image added")
+        database.imageDao().insert(image)
+    }
 
     fun deleteImage(image: Image) = database.imageDao().delete(image)
 
@@ -92,7 +97,10 @@ class Repository @Inject constructor(
      * TextDao methods
      */
 
-    fun insertNewText(text: Text) = database.textDao().insert(text)
+    fun insertNewText(text: Text) {
+        Log.d(TAG, "new text added")
+        database.textDao().insert(text)
+    }
 
     fun deleteText(text: Text) = database.textDao().delete(text)
 

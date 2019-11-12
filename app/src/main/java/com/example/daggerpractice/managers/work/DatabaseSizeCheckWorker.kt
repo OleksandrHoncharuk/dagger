@@ -12,15 +12,17 @@ import javax.inject.Inject
 class DatabaseSizeCheckWorker(context: Context, workerParams: WorkerParameters, private val repository: Repository)
     : Worker(context, workerParams) {
 
+    private val TAG = DatabaseSizeCheckWorker::class.java.simpleName
+
     override fun doWork(): Result {
         val users = repository.getAllUsers()
 
         return if (users.isEmpty()) {
-            Log.d("DatabaseSizeCheckWorker", "user is empty. Start download")
+            Log.d(TAG, "user is empty. Start download")
             Result.success()
         }
         else {
-            Log.d("DatabaseSizeCheckWorker", "user is not empty. Cancel download")
+            Log.d(TAG, "user is not empty. Cancel download")
             Result.failure()
         }
     }

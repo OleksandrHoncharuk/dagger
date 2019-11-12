@@ -15,6 +15,8 @@ class DaggerApp: DaggerApplication() {
 
     @Inject lateinit var managerFactory: ManagerFactory
 
+    private val TAG = DaggerApp::class.java.simpleName
+
     override fun applicationInjector(): AndroidInjector<out DaggerApp> {
         return DaggerAppComponent.builder().create(this)
     }

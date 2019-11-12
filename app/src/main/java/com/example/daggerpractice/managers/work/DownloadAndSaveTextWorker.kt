@@ -12,13 +12,9 @@ import com.example.daggerpractice.managers.factory.ChildWorkerFactory
 import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
-@AppScope
-class DownloadAndSaveTextWorker(
-    context: Context,
-    workerParams: WorkerParameters,
-    private val repository: Repository
-) :
-    Worker(context, workerParams) {
+class DownloadAndSaveTextWorker(context: Context, workerParams: WorkerParameters, private val repository: Repository): Worker(context, workerParams) {
+
+    private val TAG = DownloadAndSaveTextWorker::class.java.simpleName
 
     override fun doWork(): Result {
         return try {
@@ -43,7 +39,7 @@ class DownloadAndSaveTextWorker(
     }
 
     private fun saveRandomText(text: String) {
-        Log.d("DownloadAndSaveText", "new text added")
+        Log.d(TAG, "new text added")
         repository.insertNewText(Text(text))
     }
 

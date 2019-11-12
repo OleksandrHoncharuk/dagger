@@ -11,8 +11,9 @@ import com.example.daggerpractice.data.persistance.model.User
 import com.example.daggerpractice.managers.factory.ChildWorkerFactory
 import javax.inject.Inject
 
-class FillDatabaseWithNewUsersWorker(context: Context, workerParams: WorkerParameters, private val repository: Repository) :
-    Worker(context, workerParams) {
+class FillDatabaseWithNewUsersWorker(context: Context, workerParams: WorkerParameters, private val repository: Repository): Worker(context, workerParams) {
+
+    private val TAG = FillDatabaseWithNewUsersWorker::class.java.simpleName
 
     override fun doWork(): Result {
         //todo put in runBlocking
@@ -30,7 +31,7 @@ class FillDatabaseWithNewUsersWorker(context: Context, workerParams: WorkerParam
     }
 
     private fun addUser(image: Image, text: String) {
-        Log.d("FillDatabaseWithNew", "New User added")
+        Log.d(TAG, "creating new user")
         val user = User(image.id)
         user.url = image.url
 

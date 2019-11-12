@@ -14,11 +14,9 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
-class DownloadAndSaveImagesWorker(
-    context: Context,
-    workerParams: WorkerParameters,
-    private val repository: Repository)
-    : Worker(context, workerParams){
+class DownloadAndSaveImagesWorker(context: Context, workerParams: WorkerParameters, private val repository: Repository): Worker(context, workerParams){
+
+    private val TAG = DownloadAndSaveImagesWorker::class.java.simpleName
 
     override fun doWork(): Result {
         return try {
@@ -31,13 +29,13 @@ class DownloadAndSaveImagesWorker(
 
             Result.success()
         } catch (error: Throwable) {
-            Log.e("DownloadAndSaveImages", error.message!!)
+            Log.e(TAG, error.message!!)
             Result.failure()
         }
     }
 
     private fun insertImage(response: ImageResponce) {
-        Log.d("DownloadAndSaveImages", "new image added")
+        Log.d(TAG, "create new image")
         repository.insertNewImage(Image(response.id!!, response.url!!))
     }
 
