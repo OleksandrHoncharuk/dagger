@@ -9,7 +9,9 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.*
+import com.example.daggerpractice.DaggerApp
 import com.example.daggerpractice.R
+import com.example.daggerpractice.displays.MainActivity
 import com.example.daggerpractice.displays.details.DetailsFragment
 import com.example.daggerpractice.displays.home.adapter.HomeAdapter
 import com.example.daggerpractice.displays.home.adapter.ItemData
@@ -24,6 +26,11 @@ class HomeFragment @Inject constructor() : DaggerFragment(), HomeView, HomeAdapt
 
     private lateinit var viewModel: HomeViewModel
     private lateinit var recycler: RecyclerView
+
+    override fun onResume() {
+        (activity as MainActivity).setToolbarParameters(false, DaggerApp::class.java.simpleName)
+        super.onResume()
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val root = inflater.inflate(R.layout.home_fragment_layout, container, false)
@@ -44,10 +51,6 @@ class HomeFragment @Inject constructor() : DaggerFragment(), HomeView, HomeAdapt
         return root
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-    }
-
     private fun setRecyclerViewAdapter() {
         recycler.adapter = viewModel.getAdapter()
         viewModel.getAdapter().setOnItemClickedListener(this)
@@ -56,9 +59,11 @@ class HomeFragment @Inject constructor() : DaggerFragment(), HomeView, HomeAdapt
     }
 
     override fun onClicked(itemData: ItemData) {
+        (activity as MainActivity).expandCollapseAppBar(true)
+        (activity as MainActivity).unLockAppBar()
         activity!!.supportFragmentManager
             .beginTransaction()
-            .addToBackStack("Details")
+            .addToBackStack("details")
             .replace(R.id.relative_for_fragments,
                 createDetailsFragment(itemData),
                 DetailsFragment::class.java.simpleName)

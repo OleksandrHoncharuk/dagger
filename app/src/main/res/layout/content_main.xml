@@ -7,10 +7,6 @@
     tools:context=".displays.splash.SplashActivity"
     tools:showIn="@layout/activity_splash">
 
-    <RelativeLayout
-        android:id="@+id/relative_for_fragments"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        tools:context=".main_layout.MainActivity"/>
+
 
 </LinearLayout>
