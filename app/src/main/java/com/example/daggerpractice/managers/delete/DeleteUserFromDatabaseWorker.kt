@@ -1,38 +1,34 @@
-package com.example.daggerpractice.managers.work
+package com.example.daggerpractice.managers.delete
 
 import android.content.Context
-import android.util.Log
 import androidx.work.ListenableWorker
 import androidx.work.Worker
 import androidx.work.WorkerParameters
 import com.example.daggerpractice.data.Repository
-import com.example.daggerpractice.data.persistance.model.Text
 import com.example.daggerpractice.di.AppScope
 import com.example.daggerpractice.managers.factory.ChildWorkerFactory
 import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
-class DownloadAndSaveTextWorker(context: Context, workerParams: WorkerParameters, private val repository: Repository): Worker(context, workerParams) {
+class DeleteUserFromDatabaseWorker(context: Context, workerParams: WorkerParameters, private val repository: Repository, private val id: String): Worker(context, workerParams) {
 
-    private val TAG = DownloadAndSaveTextWorker::class.java.simpleName
+    private val TAG = DeleteUserFromDatabaseWorker::class.java.simpleName
 
     override fun doWork(): Result {
         return try {
             runBlocking {
-                repository.insertNewText(repository.getRandomText())
+                repository.deleteUserById(id)
             }
-
             Result.success()
-
         } catch (error: Throwable) {
             Result.failure()
         }
     }
 
     @AppScope
-    class Factory @Inject constructor(private val repository: Repository) : ChildWorkerFactory {
+    class Factory @Inject constructor(private val repository: Repository, private val id: String) : ChildWorkerFactory {
         override fun create(context: Context, params: WorkerParameters): ListenableWorker {
-            return DownloadAndSaveTextWorker(context, params, repository)
+            return DeleteUserFromDatabaseWorker(context, params, repository, id)
         }
     }
 }
