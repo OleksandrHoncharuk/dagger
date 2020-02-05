@@ -23,9 +23,12 @@ class ListPresenter(private var items: ArrayList<ItemData>) {
         return items[position]
     }
 
-    fun removeItemAt(position: Int) {
+    fun removeItemAt(position: Int) :String{
         Log.d(TAG, "remove item on position = $position")
+        val item = items[position]
         items.removeAt(position)
+
+        return item.userId
     }
 
     internal fun refresh(refreshList: ArrayList<ItemData>) {

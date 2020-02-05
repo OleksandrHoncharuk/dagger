@@ -8,7 +8,10 @@ import androidx.work.WorkerParameters
 import com.example.daggerpractice.data.Repository
 import com.example.daggerpractice.data.persistance.model.Image
 import com.example.daggerpractice.data.persistance.model.User
+import com.example.daggerpractice.di.AppScope
 import com.example.daggerpractice.managers.factory.ChildWorkerFactory
+import kotlinx.coroutines.async
+import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
 class FillDatabaseWithNewUsersWorker(context: Context, workerParams: WorkerParameters, private val repository: Repository): Worker(context, workerParams) {
@@ -16,32 +19,27 @@ class FillDatabaseWithNewUsersWorker(context: Context, workerParams: WorkerParam
     private val TAG = FillDatabaseWithNewUsersWorker::class.java.simpleName
 
     override fun doWork(): Result {
-        //todo put in runBlocking
-        val imagesList = repository.getAllImages()
-        val textList = repository.getAllText()
+        return try {
+            runBlocking {
+                val imagesList = async { repository.getAllImages() }
+                val textList = async { repository.getAllText() }
 
-        val imagesIterator = imagesList.iterator()
-        val textIterator = textList.iterator()
+                val imagesIterator = imagesList.await().iterator()
+                val textIterator = textList.await().iterator()
 
-        while (imagesIterator.hasNext() && textIterator.hasNext()) {
-            addUser(imagesIterator.next(), textIterator.next().text!!)
+                while (imagesIterator.hasNext() && textIterator.hasNext()) {
+                    repository.insertNewUser(imagesIterator.next(), textIterator.next().text!!)
+                }
+            }
+
+            return Result.success()
+        } catch (error: Throwable) {
+            Result.failure()
         }
 
-        return Result.success()
     }
 
-    private fun addUser(image: Image, text: String) {
-        Log.d(TAG, "creating new user")
-        val user = User(image.id)
-        user.url = image.url
-
-        val title = text.split(" ")[0] + text.split(" ")[1]
-        user.title = title
-        user.text = text.substring(title.length)
-
-        repository.insertNewUser(user)
-    }
-
+    @AppScope
     class Factory @Inject constructor(private val repository: Repository): ChildWorkerFactory {
         override fun create(context: Context, params: WorkerParameters): ListenableWorker {
             return FillDatabaseWithNewUsersWorker(context, params, repository)

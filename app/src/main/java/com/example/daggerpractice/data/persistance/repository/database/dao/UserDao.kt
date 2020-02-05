@@ -1,5 +1,6 @@
 package com.example.daggerpractice.data.persistance.repository.database.dao
 
+import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.example.daggerpractice.data.persistance.model.User
 
@@ -20,6 +21,9 @@ abstract class UserDao {
 
     @Query("SELECT * FROM user")
     abstract fun getAll(): List<User>
+
+    @Query("SELECT * FROM user")
+    abstract fun getUsersLiveData(): LiveData<List<User>>
 
     @Query("SELECT * FROM user WHERE id=:id")
     abstract fun findById(id: String): User

@@ -23,7 +23,7 @@ class DownloadAndSaveImagesWorker(context: Context, workerParams: WorkerParamete
             runBlocking {
                 val imagesResponse = repository.getCatsImage()
                 imagesResponse.forEach { response ->
-                    insertImage(response)
+                    repository.insertNewImage(response)
                 }
             }
 
@@ -32,11 +32,6 @@ class DownloadAndSaveImagesWorker(context: Context, workerParams: WorkerParamete
             Log.e(TAG, error.message!!)
             Result.failure()
         }
-    }
-
-    private fun insertImage(response: ImageResponce) {
-        Log.d(TAG, "create new image")
-        repository.insertNewImage(Image(response.id!!, response.url!!))
     }
 
     @AppScope

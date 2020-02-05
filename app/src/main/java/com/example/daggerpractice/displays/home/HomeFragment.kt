@@ -43,7 +43,9 @@ class HomeFragment @Inject constructor() : DaggerFragment(), HomeView, HomeAdapt
         recycler.layoutManager = manager
         recycler.addItemDecoration(DividerItemDecoration(context, manager.orientation))
 
+        Log.d(TAG, "Start observe viewModel")
         viewModel.users.observe(this, Observer {
+            Log.d(TAG, "Start observer")
             viewModel.onUsersChange(it)
             setRecyclerViewAdapter()
         })
@@ -52,10 +54,12 @@ class HomeFragment @Inject constructor() : DaggerFragment(), HomeView, HomeAdapt
     }
 
     private fun setRecyclerViewAdapter() {
-        recycler.adapter = viewModel.getAdapter()
-        viewModel.getAdapter().setOnItemClickedListener(this)
+        val adapter = viewModel.getAdapter()
+        recycler.adapter = adapter
+        adapter.setOnItemClickedListener(this)
         recycler.itemAnimator = DefaultItemAnimator()
-        ItemTouchHelper(SwipeCallback(viewModel.getAdapter())).attachToRecyclerView(recycler)
+        ItemTouchHelper(SwipeCallback(adapter)).attachToRecyclerView(recycler)
+        Log.d(TAG, "set up recycler")
     }
 
     override fun onClicked(itemData: ItemData) {

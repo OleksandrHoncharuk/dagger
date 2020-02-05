@@ -30,7 +30,6 @@ class HomeAdapter(private val presenter: ListPresenter) : RecyclerView.Adapter<H
     }
 
     fun removeItem(position: Int) {
-        val recentlyDeletedItem = presenter[position]
         Log.d(TAG, "Try to remove item on position $position")
         presenter.removeItemAt(position)
         notifyItemRemoved(position)
@@ -54,8 +53,8 @@ class HomeAdapter(private val presenter: ListPresenter) : RecyclerView.Adapter<H
 
     inner class HomeViewHolder internal constructor(itemView: View) : RecyclerView.ViewHolder(itemView), RowView, View.OnClickListener {
         private val image: ImageView
-        internal val firstLine: TextView
-        internal val secondLine: TextView
+        private val firstLine: TextView
+        private val secondLine: TextView
 
         private val TAG = HomeViewHolder::class.java.simpleName
 
