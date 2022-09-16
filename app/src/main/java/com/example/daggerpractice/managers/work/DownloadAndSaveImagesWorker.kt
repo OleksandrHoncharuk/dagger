@@ -2,6 +2,7 @@ package com.example.daggerpractice.managers.work
 
 import android.content.Context
 import android.util.Log
+import androidx.work.CoroutineWorker
 import androidx.work.ListenableWorker
 import androidx.work.Worker
 import androidx.work.WorkerParameters
@@ -14,13 +15,13 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
-class DownloadAndSaveImagesWorker(context: Context, workerParams: WorkerParameters, private val repository: Repository): Worker(context, workerParams){
+class DownloadAndSaveImagesWorker(context: Context, workerParams: WorkerParameters, private val repository: Repository): CoroutineWorker(context, workerParams){
 
     private val TAG = DownloadAndSaveImagesWorker::class.java.simpleName
 
-    override fun doWork(): Result {
+    override suspend fun doWork(): Result {
         return try {
-            runBlocking {
+            coroutineScope {
                 val imagesResponse = repository.getCatsImage()
                 imagesResponse.forEach { response ->
                     repository.insertNewImage(response)
